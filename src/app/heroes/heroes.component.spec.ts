@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, Input, Component } from '@angular/core';
 import { HeroService } from '../hero.service';
 import { Hero } from '../hero';
+import { By } from '@angular/platform-browser';
 
 describe('HeroesComponent', () => {
   let component: HeroesComponent;
@@ -131,5 +132,16 @@ describe('HeroesComponentShallow' , () => {
     // Assert
     expect(expectRes).toBe(3);
 
+  });
+
+  it("should created li for each hero in heroes list ", () => {
+    // Arrenge
+    mockHeroService.getHeroes.and.returnValue(of(HEROES));
+    fixture.detectChanges();
+    // Act
+    let expectRes = fixture.debugElement.queryAll(By.css('li')).length;
+    // Assert
+
+    expect(expectRes).toBe(3);
   });
 });
