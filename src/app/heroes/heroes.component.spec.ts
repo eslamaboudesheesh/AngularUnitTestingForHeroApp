@@ -1,7 +1,11 @@
 import { HeroesComponent } from './heroes.component';
 import { of } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA, Input, Component } from '@angular/core';
+import { HeroService } from '../hero.service';
+import { Hero } from '../hero';
 
-describe('HeroComponent', () => {
+describe('HeroesComponent', () => {
   let component: HeroesComponent;
   let HEROES;
   let mockHeroService;
@@ -85,4 +89,47 @@ describe('HeroComponent', () => {
 
     });
    });
+});
+
+describe('HeroesComponentShallow' , () => {
+  let HEROES;
+  let mockHeroService;
+  let fixture: ComponentFixture<HeroesComponent>;
+
+  @Component({
+    selector: 'app-hero',
+    template: '<div></div>',
+  })
+   class FakeHeroComponent {
+    @Input() hero: Hero;
+   // @Output() delete = new EventEmitter();
+  }
+  beforeEach(() => {
+    HEROES = [
+      {id: 1 , name: 'eslam', strength: 8  },
+      {id: 2 , name: 'Amgad', strength: 28  },
+      {id: 3 , name: 'Talal', strength: 55  }
+    ]
+    mockHeroService = jasmine.createSpyObj(['getHeroes', 'addHero', 'deleteHero']);
+  TestBed.configureTestingModule({
+    declarations: [HeroesComponent , FakeHeroComponent],
+    // schemas: [NO_ERRORS_SCHEMA],
+    providers :[
+      {provide: HeroService , useValue: mockHeroService}
+    ]
+    // NO_ERRORS_SCHEMA make angular module do not Error if unknown attribiut or element
+  });
+  fixture = TestBed.createComponent(HeroesComponent);
+  });
+
+  it('it correctly used the service for get all heroes', () => {
+    // Arrenge
+    mockHeroService.getHeroes.and.returnValue(of(HEROES));
+    fixture.detectChanges();
+    // Act
+    let expectRes = fixture.componentInstance.heroes.length;
+    // Assert
+    expect(expectRes).toBe(3);
+
+  });
 });
