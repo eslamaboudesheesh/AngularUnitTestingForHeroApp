@@ -181,9 +181,13 @@ it('should render each hero as ahero component', () => {
   const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
   // Assert
   expect(heroComponentDEs.length).toBe(3);
-  expect(heroComponentDEs[0].componentInstance.hero.name).toEqual('eslam');
-  expect(heroComponentDEs[1].componentInstance.hero.name).toEqual('Amgad');
-  expect(heroComponentDEs[2].componentInstance.hero.name).toEqual('Talal');
+  // expect(heroComponentDEs[0].componentInstance.hero.name).toEqual('eslam');
+  // expect(heroComponentDEs[1].componentInstance.hero.name).toEqual('Amgad');
+  // expect(heroComponentDEs[2].componentInstance.hero.name).toEqual('Talal');
+   for (let i=0 ; i < heroComponentDEs.length ; i++)
+   {
+    expect(heroComponentDEs[i].componentInstance.hero).toEqual(HEROES[i]);
+   }
 
 })
 
