@@ -5,6 +5,7 @@ import { NO_ERRORS_SCHEMA, Input, Component } from '@angular/core';
 import { HeroService } from '../hero.service';
 import { Hero } from '../hero';
 import { By } from '@angular/platform-browser';
+import { HeroComponent } from '../hero/hero.component';
 
 describe('HeroesComponent', () => {
   let component: HeroesComponent;
@@ -144,4 +145,46 @@ describe('HeroesComponentShallow' , () => {
 
     expect(expectRes).toBe(3);
   });
+});
+
+
+
+describe('HeroesComponentdeepTest' , () => {
+  let HEROES;
+  let mockHeroService;
+  let fixture: ComponentFixture<HeroesComponent>;
+
+  beforeEach(() => {
+    HEROES = [
+      {id: 1 , name: 'eslam', strength: 8  },
+      {id: 2 , name: 'Amgad', strength: 28  },
+      {id: 3 , name: 'Talal', strength: 55  }
+    ]
+    mockHeroService = jasmine.createSpyObj(['getHeroes', 'addHero', 'deleteHero']);
+  TestBed.configureTestingModule({
+    declarations: [HeroesComponent , HeroComponent],
+     schemas: [NO_ERRORS_SCHEMA],
+    providers :[
+      {provide: HeroService , useValue: mockHeroService}
+    ]
+    // NO_ERRORS_SCHEMA make angular module do not Error if unknown attribiut or element
+  });
+  fixture = TestBed.createComponent(HeroesComponent);
+  });
+
+
+it('should render each hero as ahero component', () => {
+  // Arrenge
+  mockHeroService.getHeroes.and.returnValue(of(HEROES));
+  fixture.detectChanges();
+  // Act
+  const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
+  // Assert
+  expect(heroComponentDEs.length).toBe(3);
+  expect(heroComponentDEs[0].componentInstance.hero.name).toEqual('eslam');
+  expect(heroComponentDEs[1].componentInstance.hero.name).toEqual('Amgad');
+  expect(heroComponentDEs[2].componentInstance.hero.name).toEqual('Talal');
+
+})
+
 });
